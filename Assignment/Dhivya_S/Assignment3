@@ -1,0 +1,52 @@
+#Blinking an LED
+import RPi.GPIO as GPIO 
+from time import sleep 
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(8, GPIO.OUT, initial=GPIO.LOW)
+while True: 
+    GPIO.output(8, GPIO.HIGH) #LED ON
+    sleep(1) 
+    GPIO.output(8, GPIO.LOW) #LED OFF
+    sleep(1)
+    
+ #Traffic light
+ import RPi.GPIO as GPIO 
+from time import sleep 
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(8, GPIO.IN)#IR FOR LANE 1
+GPIO.setup(11, GPIO.IN)#IR FOR LANE 2
+GPIO.setup(16, GPIO.OUT, initial=GPIO.LOW)#RED FOR LANE1
+GPIO.setup(18, GPIO.OUT, initial=GPIO.LOW)#RED FOR LANE2
+GPIO.setup(22, GPIO.OUT, initial=GPIO.LOW)#GREEN FOR LANE1
+GPIO.setup(31, GPIO.OUT, initial=GPIO.LOW)#GREEN FOR LANE2
+def control(R1,R2,G1,G2):
+    GPIO.output(16,R1)
+    GPIO.output(18,R2)
+    GPIO.output(22,G1)
+    GPIO.output(31,G2)
+
+while True:
+    if(GPIO.input(8)and GPIO.input(12)==True):
+        control(0,1,1,0)#lane1 allowed to move
+        sleep(3)
+        control(1,0,0,1)#lane2 allowed to move
+        sleep(3)
+    elif(GPIO.input(8)):
+        if(GPIO.input(11)==0):
+            control(0,1,1,0)#lane1 allowed to move;more traffic
+            sleep(5)
+            control(1,0,0,1)#lane2 allowed to move
+            sleep(1)
+    elif(GPIO.input(11)):
+        if(GPIO.input(8)==0):
+            control(0,1,1,0)#lane2 allowed to move;more traffic
+            sleep(5)
+            control(1,0,0,1)#lane1 allowed to move
+            sleep(1)
+    
+
+
+        
+
