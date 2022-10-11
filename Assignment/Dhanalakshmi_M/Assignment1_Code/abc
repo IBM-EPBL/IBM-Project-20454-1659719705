@@ -1,0 +1,56 @@
+int trigger=7;
+int echo=3;
+
+void setup()
+{
+  pinMode(trigger,OUTPUT);
+  pinMode(echo,INPUT);
+  pinMode(12,OUTPUT);
+  pinMode(4,INPUT);
+  Serial.begin(9600);
+  
+}
+
+void loop()
+{
+  double x=analogRead(A1);
+  if(x){
+    Serial.print("Motion detected -- switch ON Lights \n");
+  	double t = analogRead(A0);
+  	double c=t/1024;
+  	double v=c*5;
+  	double b=v-0.5;
+  	double d=b*100;
+  	Serial.print("Room Temperature:");
+  	Serial.println(d);
+  	if (d>40)
+    	Serial.println("Temperature is too hot -- Switch ON AC");
+  
+  	else
+     	Serial.println("Temperature is not too hot -- Switch OFF AC");
+  }
+  else{
+    Serial.println("No motion detected--switch OFF Lights");
+  }
+  int e=digitalRead(4);
+  if (e==0)
+  {
+    digitalWrite(12,HIGH);
+  	Serial.println("The bell is Ringing");
+  }
+  else{
+    digitalWrite(12,LOW);
+  }
+     
+  digitalWrite(trigger, LOW);
+  digitalWrite(trigger, HIGH);
+  delayMicroseconds(10); 
+  digitalWrite(trigger,LOW);
+  float duration=pulseIn(echo,HIGH);
+  float distance=(duration*0.0343)/2;
+  if(distance>300)
+    Serial.println("Turn ON motor--Water level is low in tank");
+  else
+    Serial.println("Water level is sufficient in tank");
+  delay(5000);
+}
