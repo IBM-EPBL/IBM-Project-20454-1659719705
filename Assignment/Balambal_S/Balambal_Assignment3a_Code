@@ -1,0 +1,18 @@
+import board
+import RPi.GPIO as GPIO
+import numpy as np
+import time
+from time import sleep
+
+#LED Actuation
+pin= 23
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(pin,GPIO.OUT)
+while True:
+	GPIO.output(pin,True)
+	print('LED On')
+	sleep(2)
+
+	GPIO.output(pin,False)
+	print('LED Off')
+	sleep(1)
