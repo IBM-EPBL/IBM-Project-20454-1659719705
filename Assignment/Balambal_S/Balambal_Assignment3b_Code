@@ -1,0 +1,29 @@
+import board
+import RPi.GPIO as GPIO
+import numpy as np
+import time
+from time import sleep
+
+#LED Actuation
+pinStop= 11
+pinReady= 13
+pinGo= 23
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(pinStop,GPIO.OUT)
+GPIO.setup(pinReady,GPIO.OUT)
+GPIO.setup(pinGo,GPIO.OUT)
+while True:
+	#stop
+	GPIO.output(pinStop,True)
+	print('Stop the vehicles! The red light is on')
+	sleep(10)
+	GPIO.output(pinStop,False)
+	#set
+	GPIO.output(pinReady,True)
+	print('Gear your vehicles up')
+	sleep(3)
+	GPIO.output(pinReady,False)
+	#go
+	GPIO.output(pinGo,True)
+	print('Go! The green light is on')
+	sleep(6)
