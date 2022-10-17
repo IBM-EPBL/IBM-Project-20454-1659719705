@@ -1,0 +1,18 @@
+import random as rand
+import time
+from time import sleep
+import RPi.GPIO as GPIO
+photoTransistor= 11
+buzzPin= 21
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(photoTransistor,GPIO.IN)
+GPIO.setup(buzzPin,GPIO.OUT)
+while(GPIO.input(photoTransistor,True)):
+	tempRoom= rand.uniform(10,50)
+	humidRoom= rand.uniform(30,100)
+	if(tempRoom>40 and roomHumid>70):
+		GPIO.output(buzzPin,True)
+		tempVal= "The room temperature is {}"
+		humidVal= "The room humidity is {}"
+		print(tempVal.format(tempRoom))
+		print(humidVal.format(humidRoom))
