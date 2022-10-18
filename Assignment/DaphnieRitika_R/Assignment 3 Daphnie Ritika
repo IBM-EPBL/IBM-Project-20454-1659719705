@@ -1,0 +1,44 @@
+#LED BLINKING USING pi
+import RPi.GPIO as GPIO
+import time
+from time import sleep
+
+pin= 11
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(pin,GPIO.OUT)
+while True:
+	GPIO.output(pin,True)
+	print('LED is On')
+	sleep(1)
+
+	GPIO.output(pin,False)
+	print('LED is Off')
+	sleep(1)
+
+#TRAFFIC LIGHTS USING pi
+import RPi.GPIO as GPIO
+import time
+from time import sleep
+
+Red= 21
+Yellow= 16
+Green= 13
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(Red,GPIO.OUT)
+GPIO.setup(Yellow,GPIO.OUT)
+GPIO.setup(Green,GPIO.OUT)
+while True:
+	#stop
+	GPIO.output(Red,True)
+	print('STOP')
+	sleep(5)
+	GPIO.output(Red,False)
+	#ready
+	GPIO.output(Yellow,True)
+	print('BE READY')
+	sleep(2)
+	GPIO.output(Yellow,False)
+	#go
+	GPIO.output(Green,True)
+	print('GO!')
+	sleep(8)
