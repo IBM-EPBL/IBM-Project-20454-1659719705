@@ -1,0 +1,10 @@
+import random
+import time
+while(1):
+    temp_room=random.uniform(30,50)
+    humidity_room=random.uniform(55,100)
+    if(room_temp>40 or room_humidity<70):
+        print("Temperature inside room:",temp_room)
+    else:
+        print("Temperature inside room:",temp_room)
+    time.sleep(1)
