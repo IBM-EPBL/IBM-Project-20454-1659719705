@@ -1,0 +1,14 @@
+import random
+import time
+ledpin= 21
+GPIO.setup(ledpin,GPIO.OUT)
+while(True):
+    temp=random.uniform(20,50)
+    humidity=random.uniform(40,80)
+    if(temp>40 or humidity<50):
+	GPIO.output(ledpin,True)
+        print("Temperature high:",temp)
+    else:
+	GPIO.output(ledpin,False)
+        print("Temperature low:",temp)
+    time.sleep(1)
