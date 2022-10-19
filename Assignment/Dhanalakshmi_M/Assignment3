@@ -1,0 +1,134 @@
+import RPi.GPIO as GPIO
+from time import sleep
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BOARD)
+
+GPIO.setup(16,GPIO.IN) #IR 1 for lane1
+GPIO.setup(15,GPIO.IN) #IR 2 for lane2
+
+GPIO.setup(22,GPIO.OUT) #R1
+GPIO.setup(24,GPIO.OUT) #G1
+
+GPIO.setup(19,GPIO.OUT) #G2
+GPIO.setup(21,GPIO.OUT) #R2
+
+#the sensors are embedded at a certain distance
+#from the traffic light.
+
+#if vehicle is detected beyond that certain limit
+#high density in that lane/direction
+#modified operation
+
+#if vehicle is not detedcted beyond that certain limit
+#low density in that lane/direction
+#Normal operation
+
+while 1:
+    if((GPIO.input(16)==True) and (GPIO.input(15)==True)):
+        sleep(1)
+        GPIO.output(22,0)
+        GPIO.output(24,1)
+        GPIO.output(19,0)
+        GPIO.output(21,1)
+        print('Lane A ON, B OFF')
+        c = 5
+        while(c !=0 ):
+            sleep(1)
+            print(c)
+            c = c - 1
+#         sleep(5)
+
+
+
+
+        GPIO.output(22,1)
+        GPIO.output(24,0)
+        GPIO.output(19,1)
+        GPIO.output(21,0)
+        print('Lane A OFF, B ON')
+        c = 5
+        while(c !=0 ):
+            sleep(1)
+            print(c)
+            c = c - 1
+#         sleep(5)
+        conn = urlopen(baseURL + '&field1=%s' % (0))
+        conn = urlopen(baseURL + '&field2=%s' % (0))
+        conn.close()
+
+    elif((GPIO.input(16)==False) and (GPIO.input(15)==True)):
+        #high density in lane A
+        sleep(1)
+        GPIO.output(22,0)
+        GPIO.output(24,1)
+        GPIO.output(19,0)
+        GPIO.output(21,1)
+        print('Lane A ON, B OFF')
+        c=15
+        while(c !=0 ):
+            sleep(1)
+            print(c)
+            c = c - 1
+        
+        GPIO.output(22,1)
+        GPIO.output(24,0)
+        GPIO.output(19,1)
+        GPIO.output(21,0)
+        print('Lane B ON, A OFF')
+        c = 5
+        while(c !=0 ):
+            sleep(1)
+            print(c)
+            c = c - 1
+
+    elif((GPIO.input(16)==True) and (GPIO.input(15)==False)):
+        #high density in lane B
+        sleep(1)
+        GPIO.output(22,1)
+        GPIO.output(24,0)
+
+
+
+        GPIO.output(19,1)
+        GPIO.output(21,0)
+
+        print('Lane B ON, A OFF')
+        c=15
+        while(c !=0 ):
+            sleep(1)
+            print(c)
+            c = c - 1
+        GPIO.output(22,0)
+        GPIO.output(24,1)
+        GPIO.output(19,0)
+        GPIO.output(21,1)
+        print('Lane A ON, B OFF')
+        c = 5
+        while(c !=0 ):
+            sleep(1)
+            print(c)
+            c = c - 1
+
+    elif((GPIO.input(16)==False) and (GPIO.input(15)==False)):
+        sleep(1)
+        GPIO.output(22,0)
+        GPIO.output(24,1)
+        GPIO.output(19,0)
+        GPIO.output(21,1)
+        print('Lane A on, B off')
+        c = 10
+        while(c !=0 ):
+            sleep(1)
+            print(c)
+            c = c - 1
+        GPIO.output(22,1)
+        GPIO.output(24,0)
+        GPIO.output(19,1)
+        GPIO.output(21,0)
+        print('lane B on, A off')
+        c = 10
+        while(c !=0 ):
+            sleep(1)
+            print(c)
+            c = c - 1
+    
