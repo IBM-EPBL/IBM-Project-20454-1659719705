@@ -1,0 +1,145 @@
+#include <WiFi.h>
+#include <PubSubClient.h>
+String data3;
+float d1;
+
+void callback(char* subscribetopic, byte* payload, unsigned int payloadLength);
+
+//IBM Account Credentials
+#define ORG "f1pgwv"
+#define DEVICE_TYPE "rasp"
+#define DEVICE_ID "2512"
+#define TOKEN "k6zH?J0pNfsHf(@UhJ"
+
+//Customize the given values
+char server[] = ORG ".messaging.internetofthings.ibmcloud.com";
+char pubTopic[] = "iot-2/evt/distance_calculation/fmt/json";
+char subscribetopic[] = "iot-2/cmd/command/fmt/String";
+char authMethod[] = "use-token-auth";
+char clientId[] = "d:" ORG ":" DEVICE_TYPE ":" DEVICE_ID;
+char token[] = TOKEN;
+
+WiFiClient wifiClient;
+PubSubClient client(server, 1883, NULL, wifiClient);
+
+int TRIG= 32;
+int ECHO= 21;
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(11520);
+  pinMode(ECHO,INPUT);
+  pinMode(TRIG,OUTPUT);
+  delay(10);
+  Serial.println();
+  wificonnect();
+  mqttconnect();
+}
+
+void loop() 
+{
+  digitalWrite(TRIG,LOW);
+  digitalWrite(TRIG,HIGH);
+  delayMicroseconds(100);
+  digitalWrite(TRIG,LOW);
+  float t= pulseIn(ECHO,HIGH);
+  float d= (t*0.0343)/2;
+  d1= d*100; //get in metres
+  Serial.print("The distance measured is: ");
+  Serial.println(d1);
+  if(d<=100)
+  {
+    PublishData(d1);
+    delay(3000);
+    if(!client.loop())
+    {
+      mqttconnect();
+    }
+  }
+}
+
+void PublishData(float distance)
+{
+  mqttconnect();
+  String payload = "{\"distance\":";
+  payload += distance;
+  payload+= "}";
+
+  Serial.print("Sending Payload...");
+  Serial.println(payload);
+
+  if(client.publish(pubTopic, (char*) payload.c_str()))
+  {
+    Serial.println("Publish Ok");
+  }
+  else
+  {
+    Serial.println("Publish Failed");
+  }
+}
+
+void mqttconnect()
+{
+  if(!client.connected())
+  {
+    Serial.print("Reconnecting client to ");
+    Serial.println(server);
+    while(!!!client.connect(clientId, authMethod, token))
+    {
+      Serial.println(".");
+      delay(500);
+    }
+    initManagedDevice();
+    Serial.println();
+  }
+}
+
+void wificonnect()
+{
+  // We start by connecting to a WiFi network
+  Serial.println();
+  Serial.print("Connecting to ");
+  WiFi.begin("Wokwi-GUEST", "", 6);
+  while (WiFi.status() != WL_CONNECTED) 
+  {
+    delay(500);
+    Serial.print(".");
+  }
+  randomSeed(micros());
+
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+}
+
+void initManagedDevice()
+{
+  if(client.subscribe(subscribetopic))
+  {
+    Serial.println(subscribetopic);
+    Serial.print("Subscribe to cmd OK");
+  }
+  else
+  {
+    Serial.println("Subscribe to cmd failed");
+  }
+}
+
+void callback(char* subscribetopic, byte* payload, unsigned int payloadLength)
+{
+  Serial.print("callback invoked for topic: ");
+  Serial.println(subscribetopic);
+  for(int i=0; i<payloadLength; i++)
+  {
+    data3 += (char)payload[i];
+  }
+
+  Serial.println("data: " + data3);
+  if(data3== "alert")
+  {
+    Serial.println(data3);
+  }
+}
+
+https://wokwi.com/projects/348581969522590291
