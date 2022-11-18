@@ -1,0 +1,65 @@
+const int TRIG_PIN = 26;
+const int ECHO_PIN = 27;
+
+const unsigned int MAX_DIST = 5800;
+//-------credentials of IBM Accounts------
+#define ORG "iecq29"//IBM ORGANITION ID 
+#define DEVICE_TYPE "Assignment"//Device type mentioned in ibm watson IOT Platform 
+#define DEVICE_ID "DistanceAlert"//Device ID mentioned in ibm watson IOT Platform 
+#define TOKEN "12345678" //Token String data3;
+
+void setup() {
+
+  pinMode(TRIG_PIN, OUTPUT);
+  digitalWrite(TRIG_PIN, LOW);
+  pinMode(ECHO_PIN, INPUT);
+Serial.begin(9600);
+}
+
+void loop() {
+
+  unsigned long t1;
+  unsigned long t2;
+  unsigned long pulse_width;
+  float cm;
+  float inches;
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+
+  while ( digitalRead(ECHO_PIN) == 0 );
+
+  t1 = micros();
+  while ( digitalRead(ECHO_PIN) == 1);
+  t2 = micros();
+  pulse_width = t2 - t1;
+  cm = pulse_width / 58.0;
+  inches = pulse_width / 148.0;
+
+  if ( pulse_width < MAX_DIST ) {
+Serial.println("Alert");
+    setup1();
+    loop1();
+
+  } else {
+Serial.print(cm);
+Serial.print(" cm \t");
+Serial.print(inches);
+Serial.println(" in");
+  }
+
+
+  delay(60);
+}
+
+
+
+void setup1() {
+  pinMode(10, OUTPUT); }
+void loop1() {
+  digitalWrite(10, HIGH);   delay(500); 
+  digitalWrite(10, LOW); 
+  delay(500); 
+}
+
+Wokwi Link: https://wokwi.com/projects/348678815160992338
