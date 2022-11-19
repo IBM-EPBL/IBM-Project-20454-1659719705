@@ -3,18 +3,15 @@
 String data3;
 float d1;
 
-void callback(char* subscribetopic, byte* payload, unsigned int payloadLength);
-
 //IBM Account Credentials
 #define ORG "7ycjfd"
-#define DEVICE_TYPE "raspberrypi"
-#define DEVICE_ID "pi"
-#define TOKEN "9150131518"
+#define DEVICE_TYPE "esp32"
+#define DEVICE_ID "wokwi32"
+#define TOKEN "193002013"
 
 //Customize the given values
 char server[] = ORG ".messaging.internetofthings.ibmcloud.com";
 char pubTopic[] = "iot-2/evt/distance_calculation/fmt/json";
-char subscribetopic[] = "iot-2/cmd/command/fmt/String";
 char authMethod[] = "use-token-auth";
 char clientId[] = "d:" ORG ":" DEVICE_TYPE ":" DEVICE_ID;
 char token[] = TOKEN;
@@ -63,7 +60,7 @@ void PublishData(float distance)
   mqttconnect();
   String payload = "{\"distance\":";
   payload += distance;
-  payload+= "}";
+  payload+= "alert}";
 
   Serial.print("Sending Payload...");
   Serial.println(payload);
@@ -89,7 +86,6 @@ void mqttconnect()
       Serial.println(".");
       delay(500);
     }
-    initManagedDevice();
     Serial.println();
   }
 }
@@ -111,35 +107,6 @@ void wificonnect()
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
-}
-
-void initManagedDevice()
-{
-  if(client.subscribe(subscribetopic))
-  {
-    Serial.println(subscribetopic);
-    Serial.print("Subscribe to cmd OK");
-  }
-  else
-  {
-    Serial.println("Subscribe to cmd failed");
-  }
-}
-
-void callback(char* subscribetopic, byte* payload, unsigned int payloadLength)
-{
-  Serial.print("callback invoked for topic: ");
-  Serial.println(subscribetopic);
-  for(int i=0; i<payloadLength; i++)
-  {
-    data3 += (char)payload[i];
-  }
-
-  Serial.println("data: " + data3);
-  if(data3== "alert")
-  {
-    Serial.println(data3);
-  }
 }
 
 Wokwi Link: https://wokwi.com/projects/348581969522590291
